@@ -387,6 +387,16 @@ extern NSString *const SRHTTPResponseErrorKey;
 - (void)webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(nullable NSString *)reason wasClean:(BOOL)wasClean;
 
 /**
+ Called when a given web socket was closed.
+
+ @param webSocket An instance of `SRWebSocket` that was closed.
+ @param code      Code reported by the server.
+ @param reasonData    Data.
+ @param wasClean  Boolean value indicating whether a socket was closed in a clean state.
+ */
+- (void)webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code dataReason:(nullable NSData *)reasonData wasClean:(BOOL)wasClean;
+
+/**
  Called on receive of a ping message from the server.
 
  @param webSocket An instance of `SRWebSocket` that received a ping frame.

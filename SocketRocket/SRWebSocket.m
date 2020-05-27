@@ -106,6 +106,7 @@ NSString *const SRHTTPResponseErrorKey = @"HTTPResponseStatusCode";
     NSMutableData *_currentFrameData;
 
     NSString *_closeReason;
+    NSData *_closeReasonData;
 
     NSString *_secKey;
 
@@ -747,7 +748,8 @@ static inline BOOL closeCodeIsValid(int closeCode) {
         }
         if (dataSize > 2) {
             _closeReason = [[NSString alloc] initWithData:[data subdataWithRange:NSMakeRange(2, dataSize - 2)] encoding:NSUTF8StringEncoding];
-            if (!_closeReason) {
+            _closeReasonData = [data subdataWithRange:NSMakeRange(2, dataSize - 2)];
+            if (!_closeReason && !_closeReasonData) {
                 [self _closeWithProtocolError:@"Close reason MUST be valid UTF-8"];
                 return;
             }
@@ -1098,6 +1100,7 @@ static const uint8_t SRPayloadLenMask   = 0x7F;
             [self.delegateController performDelegateBlock:^(id<SRWebSocketDelegate>  _Nullable delegate, SRDelegateAvailableMethods availableMethods) {
                 if (availableMethods.didCloseWithCode) {
                     [delegate webSocket:self didCloseWithCode:_closeCode reason:_closeReason wasClean:YES];
+                    [delegate webSocket:self didCloseWithCode:_closeCode dataReason:_closeReasonData wasClean:YES];
                 }
             }];
         }
