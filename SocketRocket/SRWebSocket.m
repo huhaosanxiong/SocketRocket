@@ -1099,8 +1099,8 @@ static const uint8_t SRPayloadLenMask   = 0x7F;
         if (!_failed) {
             [self.delegateController performDelegateBlock:^(id<SRWebSocketDelegate>  _Nullable delegate, SRDelegateAvailableMethods availableMethods) {
                 if (availableMethods.didCloseWithCode) {
-                    [delegate webSocket:self didCloseWithCode:_closeCode reason:_closeReason wasClean:YES];
-                    [delegate webSocket:self didCloseWithCode:_closeCode dataReason:_closeReasonData wasClean:YES];
+                    [delegate webSocket:self didCloseWithCode:self->_closeCode reason:self->_closeReason wasClean:YES];
+                    [delegate webSocket:self didCloseWithCode:self->_closeCode dataReason:self->_closeReasonData wasClean:YES];
                 }
             }];
         }
@@ -1482,6 +1482,11 @@ static const size_t SRFrameHeaderOverhead = 32;
                                 [delegate webSocket:self
                                    didCloseWithCode:SRStatusCodeGoingAway
                                              reason:@"Stream end encountered"
+                                           wasClean:NO];
+                                
+                                [delegate webSocket:self
+                                   didCloseWithCode:self->_closeCode
+                                         dataReason:self->_closeReasonData
                                            wasClean:NO];
                             }
                         }];
